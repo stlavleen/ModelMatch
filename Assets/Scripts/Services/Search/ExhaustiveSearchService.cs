@@ -12,18 +12,25 @@ namespace ModelMatch.Services.Search
         public IEnumerable<Matrix4x4> GetMatches(HashSet<Matrix4x4> modelPoints, HashSet<Matrix4x4> spacePoints)
         {
             var matches = new List<Matrix4x4>();
+            bool isMatched = false;
+            Matrix4x4 currentOffset = new Matrix4x4();
 
             foreach (var modelPoint in modelPoints) 
             {
                 foreach (var spacePoint in spacePoints) 
                 {
-                    var offset = CalculateOffset(modelPoint, spacePoint);
-                    var modelWithOffset = CreateModelWithOffset(modelPoints, offset);
-                    var isMatched = IsMatched(modelWithOffset, spacePoints);
+                    currentOffset = CalculateOffset(modelPoint, spacePoint);
+                    var modelWithOffset = CreateModelWithOffset(modelPoints, currentOffset);
+                    isMatched = IsMatched(modelWithOffset, spacePoints);
 
-                    if (isMatched)
-                        matches.Add(offset);
+                    if (!isMatched)
+                        break;
                 }
+
+                if (isMatched)
+                    matches.Add(currentOffset);
+
+                isMatched = false;
             }
 
             return matches;
