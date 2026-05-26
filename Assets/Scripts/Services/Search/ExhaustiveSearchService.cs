@@ -1,8 +1,5 @@
 ﻿
-
-
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -10,7 +7,7 @@ namespace ModelMatch.Services.Search
 {
     // Exhaustive search. Slowest method. Approximate complexity = O(n * m) at least,
     // where n = modelPoints.Count, m = spacePoints.Count
-    public class ExhaustiveSearchService : ISearchService
+    public class ExhaustiveSearchService : SearchService, ISearchService
     {
         public IEnumerable<Matrix4x4> GetMatches(HashSet<Matrix4x4> modelPoints, HashSet<Matrix4x4> spacePoints)
         {
@@ -35,31 +32,6 @@ namespace ModelMatch.Services.Search
         public Task<IEnumerable<Matrix4x4>> GetMatchesAsync(HashSet<Matrix4x4> modelPoints, HashSet<Matrix4x4> spacePoints) 
         {
             return Task.Run(() => GetMatches(modelPoints, spacePoints));
-        }
-
-        private Matrix4x4 CalculateOffset(Matrix4x4 modelPoint, Matrix4x4 spacePoint)
-        {
-            return new Matrix4x4(); // TODO
-        }
-
-        private Matrix4x4 GetPointWithOffset(Matrix4x4 point, Matrix4x4 offset)
-        {
-            return offset * point;
-        }
-
-        private bool IsMatched(Matrix4x4 modelPoint, Matrix4x4 spacePoint, Matrix4x4 offset)
-        {
-            return offset * modelPoint == spacePoint;
-        }
-
-        private HashSet<Matrix4x4> CreateModelWithOffset(HashSet<Matrix4x4> model, Matrix4x4 offset)
-        {
-            return model.Select(point => point * offset).ToHashSet();
-        }
-
-        private bool IsMatched(HashSet<Matrix4x4> model, HashSet<Matrix4x4> space)
-        {
-            return model.IsSubsetOf(space);
         }
     }
 }
