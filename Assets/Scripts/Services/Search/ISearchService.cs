@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ModelMatch.Services
+namespace ModelMatch.Services.Search
 {
     public interface ISearchService
     {

@@ -1,5 +1,5 @@
 
-using ModelMatch.Services;
+using ModelMatch.Services.Search;
 using Zenject;
 
 public class SearchServiceInstaller : MonoInstaller

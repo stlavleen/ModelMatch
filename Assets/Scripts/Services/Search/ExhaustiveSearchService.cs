@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ModelMatch.Services
+namespace ModelMatch.Services.Search
 {
     // Exhaustive search. Slowest method. Approximate complexity = O(n * m) at least,
     // where n = modelPoints.Count, m = spacePoints.Count
