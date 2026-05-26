@@ -1,4 +1,5 @@
 ﻿
+using ModelMatch.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace ModelMatch.Services.Search
             {
                 foreach (var spacePoint in spacePoints) 
                 {
-                    currentOffset = CalculateOffset(modelPoint, spacePoint);
+                    currentOffset = CalculateOffset(modelPoint, spacePoint).Round();
                     var modelWithOffset = CreateModelWithOffset(modelPoints, currentOffset);
                     isMatched = IsMatched(modelWithOffset, spacePoints);
 

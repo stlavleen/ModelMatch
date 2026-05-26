@@ -1,6 +1,7 @@
 ﻿
 
 
+using System;
 using UnityEngine;
 
 namespace ModelMatch.Models
@@ -31,5 +32,30 @@ namespace ModelMatch.Models
                 { m.m30, m.m31, m.m32, m.m33 }
             };
         }
+
+        public static Matrix4x4 Round(this Matrix4x4 m) 
+        {
+            return new Matrix4x4 
+            {
+                m00 = Round(m.m00),
+                m01 = Round(m.m01),
+                m02 = Round(m.m02),
+                m03 = Round(m.m03),
+                m10 = Round(m.m10),
+                m11 = Round(m.m11),
+                m12 = Round(m.m12),
+                m13 = Round(m.m13),
+                m20 = Round(m.m20),
+                m21 = Round(m.m21),
+                m22 = Round(m.m22),
+                m23 = Round(m.m23),
+                m30 = Round(m.m30),
+                m31 = Round(m.m31),
+                m32 = Round(m.m32),
+                m33 = Round(m.m33)
+            };
+        }
+
+        private static float Round(float value) => (float)Math.Round(value, 10);
     }
 }

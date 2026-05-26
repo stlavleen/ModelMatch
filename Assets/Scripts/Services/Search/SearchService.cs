@@ -30,7 +30,7 @@ namespace ModelMatch.Services.Search
 
         protected HashSet<Matrix4x4> CreateModelWithOffset(HashSet<Matrix4x4> model, Matrix4x4 offset)
         {
-            return model.Select(point => point * offset).ToHashSet();
+            return model.Select(point => (point * offset).Round()).ToHashSet();
         }
 
         protected bool IsMatched(HashSet<Matrix4x4> model, HashSet<Matrix4x4> space)
