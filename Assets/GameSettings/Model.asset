@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad8f468bd910e541b300f9b1ec98d65, type: 3}
   m_Name: Model
   m_EditorClassIdentifier: 
+  original: {fileID: 3840207638060370081, guid: e8197a12bc2f09646832ca00eda0cf82, type: 3}
   path: D:\Projects\Unity\SampleData\model.json
   color: {r: 0.23549305, g: 0.7924528, b: 0.74246925, a: 0}

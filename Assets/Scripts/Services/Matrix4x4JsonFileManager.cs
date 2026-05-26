@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ModelMatch.Services
 {
-    public class Matrix4x4JsonFileManager : IMatrix4x4JsonFileManager
+    public class Matrix4x4JsonFileManager : IMatrix4x4FileManager
     {
         readonly JsonSerializer serializer;
 

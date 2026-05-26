@@ -3,12 +3,13 @@ using ModelMatch.Models;
 using ModelMatch.Services;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace ModelMatch 
 {
     public class SamplesBehaviour : MonoBehaviour
     {
-        IMatrix4x4JsonFileManager fileManager = new Matrix4x4JsonFileManager();
+        [Inject] IMatrix4x4FileManager fileManager;
 
         public SampleScriptableObject modelSettings;
         public SampleScriptableObject spaceSettings;
