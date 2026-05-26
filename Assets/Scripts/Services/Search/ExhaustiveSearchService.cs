@@ -20,6 +20,9 @@ namespace ModelMatch.Services.Search
             {
                 foreach (var spacePoint in spacePoints) 
                 {
+                    // Probably there are few possible offsets instead of one,
+                    // because of model point and space point can have different rotations but the same visual representation,
+                    // i.e. with period = 90 degrees for cubes or 360 degrees for more complex objects. 
                     currentOffset = CalculateOffset(modelPoint, spacePoint).Round();
                     var modelWithOffset = CreateModelWithOffset(modelPoints, currentOffset);
                     isMatched = IsMatched(modelWithOffset, spacePoints);
