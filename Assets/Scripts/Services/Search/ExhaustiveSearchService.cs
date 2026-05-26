@@ -14,18 +14,20 @@ namespace ModelMatch.Services.Search
         {
             var matches = new List<Matrix4x4>();
             bool isMatched = false;
+            bool offsetCalculated = false;
             Matrix4x4 currentOffset = new Matrix4x4();
 
             foreach (var modelPoint in modelPoints) 
             {
                 foreach (var spacePoint in spacePoints) 
                 {
-                    // Probably there are few possible offsets instead of one,
-                    // because of model point and space point can have different rotations but the same visual representation,
-                    // i.e. with period = 90 degrees for cubes or 360 degrees for more complex objects. 
-                    currentOffset = CalculateOffset(modelPoint, spacePoint).Round();
-                    var modelWithOffset = CreateModelWithOffset(modelPoints, currentOffset);
-                    isMatched = IsMatched(modelWithOffset, spacePoints);
+                    if (!offsetCalculated) 
+                    {
+                        currentOffset = CalculateOffset(modelPoint, spacePoint).Round();
+                        var modelWithOffset = CreateModelWithOffset(modelPoints, currentOffset);
+                        isMatched = IsMatched(modelWithOffset, spacePoints);
+                        offsetCalculated = true;
+                    }
 
                     if (!isMatched)
                         break;
@@ -35,6 +37,7 @@ namespace ModelMatch.Services.Search
                     matches.Add(currentOffset);
 
                 isMatched = false;
+                offsetCalculated = false;
             }
 
             return matches;
