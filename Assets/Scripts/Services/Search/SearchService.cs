@@ -37,5 +37,30 @@ namespace ModelMatch.Services.Search
         {
             return model.IsSubsetOf(space);
         }
+
+        protected Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
+        {
+            var rotation = Quaternion.Euler(new Vector3(x, y, z));
+            var rotationMatrix = Matrix4x4.Rotate(rotation);
+            var rotated = rotationMatrix * matrix;
+
+            return rotated;
+        }
+
+        protected Matrix4x4 Translate(Matrix4x4 matrix, float x, float y, float z) 
+        {
+            var translation = Matrix4x4.Translate(new Vector3(x, y, z));
+            var translated = translation * matrix;
+
+            return translated;
+        }
+
+        protected Matrix4x4 Scale(Matrix4x4 matrix, float x, float y, float z) 
+        {
+            var scale = Matrix4x4.Scale(new Vector3(x, y, z));
+            var scaled = scale * matrix;
+
+            return scaled;
+        }
     }
 }
