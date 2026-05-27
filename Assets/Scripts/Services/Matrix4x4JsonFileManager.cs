@@ -1,5 +1,6 @@
 ﻿
 
+using ModelMatch.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +28,7 @@ namespace ModelMatch.Services
             return dataCollection;
         }
 
-        public void Write(IEnumerable<Matrix4x4> dataCollection, string path)
+        public void Write(IEnumerable<Matrix4x4POD> dataCollection, string path)
         {
             using (var writer = File.CreateText(path))
             {

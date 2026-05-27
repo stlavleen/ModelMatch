@@ -29,7 +29,7 @@ namespace ModelMatch
             var matches = await searchService.GetMatchesAsync(modelPoints.ToHashSet(), spacePoints.ToHashSet());
             UnityEngine.Debug.LogWarning($"Search is completed. Count = {matches.Count()}");
             if (matches.Count() != 0 && !string.IsNullOrEmpty(offsetPath))
-                fileManager.Write(matches, offsetPath);
+                fileManager.Write(matches.Select(x => x.ToPOD()), offsetPath);
         }
 
         // Update is called once per frame
@@ -49,6 +49,15 @@ namespace ModelMatch
                 var renderer = obj.GetComponent<Renderer>();
                 renderer.material.color = color;
             }
+        }
+
+        private void RotateFirstPointsAndWriteToFile(IEnumerable<Matrix4x4> model, IEnumerable<Matrix4x4> space, string fileName) 
+        {
+            var modelFirstPoint = model.FirstOrDefault();
+            var spaceFirstPoint = space.FirstOrDefault();
+            var rotatedModelPoint = searchService.Rotate(modelFirstPoint, 45, 0, 0).ToPOD();
+            var rotatedSpacePoint = searchService.Rotate(spaceFirstPoint, -45, 0, 0).ToPOD();
+            fileManager.Write(new[] { rotatedModelPoint, rotatedSpacePoint }, fileName);
         }
     }
 }

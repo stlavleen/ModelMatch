@@ -38,7 +38,7 @@ namespace ModelMatch.Services.Search
             return model.IsSubsetOf(space);
         }
 
-        protected Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
+        public Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
         {
             var rotation = Quaternion.Euler(new Vector3(x, y, z));
             var rotationMatrix = Matrix4x4.Rotate(rotation);
