@@ -7,8 +7,6 @@ using UnityEngine;
 
 namespace ModelMatch.Services.Search
 {
-    // Exhaustive search. Slowest method. Approximate complexity = O(n * m) at least,
-    // where n = modelPoints.Count, m = spacePoints.Count
     public class ExhaustiveSearchService : SearchService, ISearchService
     {
         public IEnumerable<Matrix4x4> GetMatches(HashSet<Matrix4x4> modelPoints, HashSet<Matrix4x4> spacePoints)
