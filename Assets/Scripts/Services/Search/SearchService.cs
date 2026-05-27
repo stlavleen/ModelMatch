@@ -41,24 +41,21 @@ namespace ModelMatch.Services.Search
         public Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
         {
             var rotation = Quaternion.Euler(new Vector3(x, y, z));
-            var rotationMatrix = Matrix4x4.Rotate(rotation);
-            var rotated = rotationMatrix * matrix;
+            var rotated = Matrix4x4.TRS(matrix.GetPosition(), rotation, new Vector3(1, 1, 1));
 
             return rotated;
         }
 
         protected Matrix4x4 Translate(Matrix4x4 matrix, float x, float y, float z) 
         {
-            var translation = Matrix4x4.Translate(new Vector3(x, y, z));
-            var translated = translation * matrix;
+            var translated = Matrix4x4.TRS(new Vector3(x, y, z), matrix.rotation, new Vector3(1, 1, 1));
 
             return translated;
         }
 
         protected Matrix4x4 Scale(Matrix4x4 matrix, float x, float y, float z) 
         {
-            var scale = Matrix4x4.Scale(new Vector3(x, y, z));
-            var scaled = scale * matrix;
+            var scaled = Matrix4x4.TRS(matrix.GetPosition(), matrix.rotation, new Vector3(x, y, z));
 
             return scaled;
         }
