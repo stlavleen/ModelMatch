@@ -28,7 +28,7 @@ namespace ModelMatch
             UnityEngine.Debug.LogWarning("Search has been started. Please wait...");
             var matches = await searchService.GetMatchesAsync(modelPoints.ToHashSet(), spacePoints.ToHashSet());
             UnityEngine.Debug.LogWarning($"Search is completed. Count = {matches.Count()}");
-            if (matches.Count() != 0 && offsetPath is not null)
+            if (matches.Count() != 0 && !string.IsNullOrEmpty(offsetPath))
                 fileManager.Write(matches, offsetPath);
         }
 
