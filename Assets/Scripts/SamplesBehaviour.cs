@@ -56,7 +56,7 @@ namespace ModelMatch
         {
             Vector3 rotation = new Vector3(45, 0, 0);
             RotatePointsAndWriteToFile(model.ToArray(), rotation, dir, "model.json");
-            RotatePointsAndWriteToFile(space.ToArray(), rotation, dir, "space.json");
+            RotatePointsAndWriteToFile(space.ToArray(), -rotation, dir, "space.json");
         }
 
         private void RotatePointsAndWriteToFile(Matrix4x4[] obj, Vector3 rotation, string dir, string fileName)
