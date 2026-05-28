@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using MathNet.Numerics.LinearAlgebra;
 using ModelMatch.Models;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace ModelMatch.Services.Search
 {
@@ -18,19 +18,31 @@ namespace ModelMatch.Services.Search
             return offset.ToMatrix4x4();
         }
 
+        protected Vector3 CalculateOffsetVec3(Matrix4x4 modelPoint, Matrix4x4 spacePoint)
+        {
+            var diff = spacePoint.GetPosition() - modelPoint.GetPosition();
+
+            return diff;
+        }
+
         protected Matrix4x4 GetPointWithOffset(Matrix4x4 point, Matrix4x4 offset)
         {
             return offset * point;
         }
 
-        protected bool IsMatched(Matrix4x4 modelPoint, Matrix4x4 spacePoint, Matrix4x4 offset)
-        {
-            return offset * modelPoint == spacePoint;
-        }
+        //protected bool IsMatched(Matrix4x4 modelPoint, Matrix4x4 spacePoint, Matrix4x4 offset)
+        //{
+        //    return offset * modelPoint == spacePoint;
+        //}
 
         protected HashSet<Matrix4x4> CreateModelWithOffset(HashSet<Matrix4x4> model, Matrix4x4 offset)
         {
             return model.Select(point => (point * offset).Round()).ToHashSet();
+        }
+
+        protected HashSet<Matrix4x4> TranslateModelToPosition(HashSet<Matrix4x4> model, Vector3 position)
+        {
+            return model.Select(point => Translate(point, position.x, position.y, position.z).Round()).ToHashSet();
         }
 
         protected bool IsMatched(HashSet<Matrix4x4> model, HashSet<Matrix4x4> space)
