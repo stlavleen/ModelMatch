@@ -55,8 +55,8 @@ namespace ModelMatch
         {
             var modelFirstPoint = model.FirstOrDefault();
             var spaceFirstPoint = space.FirstOrDefault();
-            var rotatedModelPoint = searchService.Rotate(modelFirstPoint, 45, 0, 0).ToPOD();
-            var rotatedSpacePoint = searchService.Rotate(spaceFirstPoint, -45, 0, 0).ToPOD();
+            var rotatedModelPoint = searchService.Rotate(modelFirstPoint, 90, 0, 0).ToPOD();
+            var rotatedSpacePoint = searchService.Rotate(spaceFirstPoint, 90, 0, 0).ToPOD();
             fileManager.Write(new[] { rotatedModelPoint, rotatedSpacePoint }, fileName);
         }
     }
