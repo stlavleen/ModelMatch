@@ -1,5 +1,4 @@
 ﻿
-using MathNet.Numerics.LinearAlgebra;
 using ModelMatch.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +9,8 @@ namespace ModelMatch.Services.Search
 {
     public abstract class SearchService
     {
-        protected Matrix4x4 CalculateOffset(Matrix4x4 modelPoint, Matrix4x4 spacePoint)
-        {
-            var modelMatrix = Matrix<float>.Build.DenseOfArray(modelPoint.ToArray());
-            var spaceMatrix = Matrix<float>.Build.DenseOfArray(spacePoint.ToArray());
-            var offset = modelMatrix.Solve(spaceMatrix);
-
-            return offset.ToMatrix4x4();
-        }
-
-        protected Matrix4x4 CalculateOffsetMat4x4(Matrix4x4 modelPoint, Matrix4x4 spacePoint) => 
-            Matrix4x4.Translate(CalculateOffsetVec3(spacePoint, modelPoint));
+        protected Matrix4x4 CalculateOffset(Matrix4x4 modelPoint, Matrix4x4 spacePoint) => 
+            Matrix4x4.Translate(CalculateOffsetVec3(modelPoint, spacePoint));
 
         protected Vector3 CalculateOffsetVec3(Matrix4x4 modelPoint, Matrix4x4 spacePoint) => 
             spacePoint.GetPosition() - modelPoint.GetPosition();
@@ -54,16 +44,12 @@ namespace ModelMatch.Services.Search
 
         protected IEnumerable<Matrix4x4> CreateModelWithOffset(IEnumerable<Matrix4x4> model, Matrix4x4 offset)
         {
-            return model.Select(point => (point * offset).Round());
-        }
-
-        protected IEnumerable<Matrix4x4> CreateModelWithOffset(IEnumerable<Matrix4x4> model, Vector3 offset) 
-        {
-            return model.Select(point => 
+            return model.Select(point =>
             {
                 Matrix4x4 newPoint = point;
-                Vector3 pointPosition = point.GetPosition();
-                newPoint.SetColumn(3, new Vector4(pointPosition.x + offset.x, pointPosition.y + offset.y, pointPosition.z + offset.z, point.m33));
+                Vector4 pointPositionVector = point.GetColumn(3);
+                Vector4 displacedPositionVector = offset * pointPositionVector;
+                newPoint.SetColumn(3, displacedPositionVector);
                 return newPoint;
             });
         }

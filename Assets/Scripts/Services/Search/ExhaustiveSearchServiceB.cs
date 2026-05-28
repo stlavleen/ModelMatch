@@ -19,21 +19,18 @@ namespace ModelMatch.Services.Search
             var matches = new List<Matrix4x4>();
             var modelFirstPoint = modelPoints.FirstOrDefault();
             bool isMatched;
-            Vector3 currentOffsetVec3;
             Matrix4x4 currentOffset;
             IEnumerable<Matrix4x4> modelWithCurrentOffset;
 
             foreach (var spacePoint in spacePoints)
             {
-                currentOffsetVec3 = CalculateOffsetVec3(modelFirstPoint, spacePoint);
-                currentOffset = Matrix4x4.Translate(currentOffsetVec3);
-                modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffsetVec3).ToArray();
+                currentOffset = CalculateOffset(modelFirstPoint, spacePoint);
+                modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffset).ToArray();
                 isMatched = IsMatched(modelWithCurrentOffset, spacePoints);
 
                 if (isMatched)
                     matches.Add(currentOffset);
             }
-
 
             return matches;
         }
