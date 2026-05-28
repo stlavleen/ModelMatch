@@ -3,6 +3,7 @@ using ModelMatch.Models;
 using ModelMatch.Services;
 using ModelMatch.Services.Search;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using Zenject;
@@ -51,13 +52,22 @@ namespace ModelMatch
             }
         }
 
-        private void RotateFirstPointsAndWriteToFile(IEnumerable<Matrix4x4> model, IEnumerable<Matrix4x4> space, string fileName) 
+        private void RotatePointsAndWriteToFile(IEnumerable<Matrix4x4> model, IEnumerable<Matrix4x4> space, string dir) 
         {
-            var modelFirstPoint = model.FirstOrDefault();
-            var spaceFirstPoint = space.FirstOrDefault();
-            var rotatedModelPoint = searchService.Rotate(modelFirstPoint, 90, 0, 0).ToPOD();
-            var rotatedSpacePoint = searchService.Rotate(spaceFirstPoint, 90, 0, 0).ToPOD();
-            fileManager.Write(new[] { rotatedModelPoint, rotatedSpacePoint }, fileName);
+            Vector3 rotation = new Vector3(45, 0, 0);
+            RotatePointsAndWriteToFile(model.ToArray(), rotation, dir, "model.json");
+            RotatePointsAndWriteToFile(space.ToArray(), rotation, dir, "space.json");
+        }
+
+        private void RotatePointsAndWriteToFile(Matrix4x4[] obj, Vector3 rotation, string dir, string fileName)
+        {
+            for (int i = 0; i < obj.Length; i++) 
+            {
+                var k = i % 2 == 0 ? 0 : 1;
+                obj[i] = searchService.Rotate(obj[i], rotation * k);
+            }  
+
+            fileManager.Write(obj.Select(x => x.ToPOD()), Path.Combine(dir, fileName));
         }
     }
 }

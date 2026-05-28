@@ -19,11 +19,17 @@ namespace ModelMatch.Services.Search
             return offset.ToMatrix4x4();
         }
 
-        protected Vector3 CalculateOffsetVec3(Matrix4x4 modelPoint, Matrix4x4 spacePoint)
+        protected Matrix4x4 CalculateOffsetMat4x4(Matrix4x4 modelPoint, Matrix4x4 spacePoint) => 
+            Matrix4x4.Translate(CalculateOffsetVec3(spacePoint, modelPoint));
+
+        protected Vector3 CalculateOffsetVec3(Matrix4x4 modelPoint, Matrix4x4 spacePoint) => 
+            spacePoint.GetPosition() - modelPoint.GetPosition();
+
+        protected Vector4 CalculateOffsetVec4(Matrix4x4 modelPoint, Matrix4x4 spacePoint) 
         {
             var diff = spacePoint.GetPosition() - modelPoint.GetPosition();
 
-            return diff;
+            return new Vector4(diff.x, diff.y, diff.z, 1);
         }
 
         protected Matrix4x4 GetPointWithOffset(Matrix4x4 point, Matrix4x4 offset)
@@ -67,10 +73,10 @@ namespace ModelMatch.Services.Search
             return model.Select(point => Translate(point, position.x, position.y, position.z).Round()).ToHashSet();
         }
 
-        public Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
+        public Matrix4x4 Rotate(Matrix4x4 matrix, Vector3 rotation) 
         {
-            var rotation = Quaternion.Euler(new Vector3(x, y, z));
-            var rotated = Matrix4x4.TRS(matrix.GetPosition(), rotation, new Vector3(1, 1, 1));
+            var rotationQ = Quaternion.Euler(rotation);
+            var rotated = Matrix4x4.TRS(matrix.GetPosition(), rotationQ, new Vector3(1, 1, 1));
 
             return rotated;
         }
