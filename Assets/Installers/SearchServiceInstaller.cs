@@ -6,6 +6,6 @@ public class SearchServiceInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
-        Container.Bind<ISearchService>().To<ExhaustiveSearchService>().AsSingle().NonLazy();
+        Container.Bind<ISearchService>().To<ExhaustiveSearchServiceB>().AsSingle().NonLazy();
     }
 }

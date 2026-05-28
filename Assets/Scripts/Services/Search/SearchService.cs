@@ -1,13 +1,14 @@
 ﻿
+using MathNet.Numerics.LinearAlgebra;
+using ModelMatch.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
-using ModelMatch.Models;
-using MathNet.Numerics.LinearAlgebra;
 
 namespace ModelMatch.Services.Search
 {
-    public class SearchService
+    public abstract class SearchService
     {
         protected Matrix4x4 CalculateOffset(Matrix4x4 modelPoint, Matrix4x4 spacePoint)
         {
@@ -30,24 +31,40 @@ namespace ModelMatch.Services.Search
             return offset * point;
         }
 
-        //protected bool IsMatched(Matrix4x4 modelPoint, Matrix4x4 spacePoint, Matrix4x4 offset)
-        //{
-        //    return offset * modelPoint == spacePoint;
-        //}
-
-        protected HashSet<Matrix4x4> CreateModelWithOffset(HashSet<Matrix4x4> model, Matrix4x4 offset)
+        protected bool IsMatched(Matrix4x4 modelPoint, Matrix4x4 spacePoint, Matrix4x4 offset)
         {
-            return model.Select(point => (point * offset).Round()).ToHashSet();
+            return offset * modelPoint == spacePoint;
         }
 
-        protected HashSet<Matrix4x4> TranslateModelToPosition(HashSet<Matrix4x4> model, Vector3 position)
+        protected bool IsMatched(Vector3 modelPointPosition, Vector3 spacePointPosition, Vector3 offset) 
+        {
+            return modelPointPosition + offset == spacePointPosition;
+        }
+
+        protected bool IsMatched(IEnumerable<Matrix4x4> model, IEnumerable<Matrix4x4> space)
+        {
+            return model.ToHashSet().IsSubsetOf(space);
+        }
+
+        protected IEnumerable<Matrix4x4> CreateModelWithOffset(IEnumerable<Matrix4x4> model, Matrix4x4 offset)
+        {
+            return model.Select(point => (point * offset).Round());
+        }
+
+        protected IEnumerable<Matrix4x4> CreateModelWithOffset(IEnumerable<Matrix4x4> model, Vector3 offset) 
+        {
+            return model.Select(point => 
+            {
+                Matrix4x4 newPoint = point;
+                Vector3 pointPosition = point.GetPosition();
+                newPoint.SetColumn(3, new Vector4(pointPosition.x + offset.x, pointPosition.y + offset.y, pointPosition.z + offset.z, point.m33));
+                return newPoint;
+            });
+        }
+
+        protected IEnumerable<Matrix4x4> TranslateModelToPosition(IEnumerable<Matrix4x4> model, Vector3 position)
         {
             return model.Select(point => Translate(point, position.x, position.y, position.z).Round()).ToHashSet();
-        }
-
-        protected bool IsMatched(HashSet<Matrix4x4> model, HashSet<Matrix4x4> space)
-        {
-            return model.IsSubsetOf(space);
         }
 
         public Matrix4x4 Rotate(Matrix4x4 matrix, float x, float y, float z) 
@@ -71,5 +88,12 @@ namespace ModelMatch.Services.Search
 
             return scaled;
         }
+
+        public Task<IEnumerable<Matrix4x4>> GetMatchesAsync(IEnumerable<Matrix4x4> modelPoints, IEnumerable<Matrix4x4> spacePoints)
+        {
+            return Task.Run(() => GetMatches(modelPoints, spacePoints));
+        }
+
+        public abstract IEnumerable<Matrix4x4> GetMatches(IEnumerable<Matrix4x4> modelPoints, IEnumerable<Matrix4x4> spacePoints);
     }
 }
