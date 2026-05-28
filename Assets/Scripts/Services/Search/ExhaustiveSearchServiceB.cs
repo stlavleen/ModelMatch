@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace ModelMatch.Services.Search
 {
+    /// <summary>
+    /// Found in case of exact match of model points to space points: rotation, scale, translation
+    /// </summary>
     public class ExhaustiveSearchServiceB : SearchService, ISearchService
     {
         public override IEnumerable<Matrix4x4> GetMatches(IEnumerable<Matrix4x4> modelPoints, IEnumerable<Matrix4x4> spacePoints)
@@ -23,7 +26,7 @@ namespace ModelMatch.Services.Search
             foreach (var spacePoint in spacePoints)
             {
                 currentOffset = CalculateOffset(modelFirstPoint, spacePoint);
-                modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffset).ToArray();
+                modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffset);
                 isMatched = IsMatched(modelWithCurrentOffset, spacePoints);
 
                 if (isMatched)
