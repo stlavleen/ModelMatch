@@ -17,29 +17,18 @@ namespace ModelMatch.Services.Search
         private IEnumerable<Matrix4x4> GetMatchesImpl(Matrix4x4[] modelPoints, Matrix4x4[] spacePoints) 
         {
             var matches = new List<Matrix4x4>();
-            bool offsetCalculated;
+            var modelFirstPoint = modelPoints.FirstOrDefault();
             bool isMatched;
-            Vector3 currentOffsetVec3 = default;
-            Matrix4x4 currentOffset = default;
+            Vector3 currentOffsetVec3;
+            Matrix4x4 currentOffset;
             IEnumerable<Matrix4x4> modelWithCurrentOffset;
 
-            foreach (var modelPoint in modelPoints)
+            foreach (var spacePoint in spacePoints)
             {
-                offsetCalculated = false;
-                isMatched = false;
-
-                foreach (var spacePoint in spacePoints)
-                {
-                    if (!offsetCalculated)
-                    {
-                        currentOffsetVec3 = CalculateOffsetVec3(modelPoint, spacePoint);
-                        currentOffset = Matrix4x4.Translate(currentOffsetVec3);
-                        offsetCalculated = true;
-                    }
-
-                    modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffsetVec3).ToArray();
-                    isMatched = IsMatched(modelWithCurrentOffset, spacePoints);
-                }
+                currentOffsetVec3 = CalculateOffsetVec3(modelFirstPoint, spacePoint);
+                currentOffset = Matrix4x4.Translate(currentOffsetVec3);
+                modelWithCurrentOffset = CreateModelWithOffset(modelPoints, currentOffsetVec3).ToArray();
+                isMatched = IsMatched(modelWithCurrentOffset, spacePoints);
 
                 if (isMatched)
                     matches.Add(currentOffset);
